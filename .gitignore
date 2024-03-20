@@ -1,7 +1,9 @@
 # Repo specific folder and files
 edullm/llm/rag/data
 
-
+# For now ignoring other llm than llamaIndex
+edullm/llm/llamacpp
+edullm/llm/ollama
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
