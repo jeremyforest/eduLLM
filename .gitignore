@@ -2,8 +2,8 @@
 edullm/llm/rag/data
 
 # For now ignoring other llm than llamaIndex
-edullm/llm/llamacpp
-edullm/llm/ollama
+edullm/llm/llm/llamacpp
+edullm/llm/llm/ollama
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
