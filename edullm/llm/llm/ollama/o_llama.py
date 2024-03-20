@@ -1,8 +1,8 @@
 import ollama 
-from edullm.llm.llm.llm import largeLanguageModel
+from edullm.llm.edu_llm import edu_LLM
 
 
-llm = largeLanguageModel(model="mistral", role="user", question='Why is the sky blue?')
+llm = edu_LLM(model="mistral", role="user", question='Why is the sky blue?')
 
 def chat_stream():
     # from https://github.com/ollama/ollama-python/tree/main/examples

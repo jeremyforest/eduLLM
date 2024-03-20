@@ -1,23 +1,31 @@
 
 
-class largeLanguageModel:
+class edu_LLM:
     '''define the general llm class properties'''
-    def __init__(self, model:str = None, role:str = None, question:str = None) -> None:
-        """_summary_
+    def __init__(self, 
+                model_type:str = None,
+                model_name:str = None, 
+                role:str = None, 
+                question:str = None) -> None:
+        """
+        
+        """
 
-        Args:
-            model (str): _description_
-            role (str): _description_
-            question (str): _description_
-        """        
-        self.model = model
+        self.model_type = model_type
+        self.model_name = model_name
         self.role = role
         self.question = question
 
+    def _checks(self):
+        """Checking that the requirement to run the model, whatever they are, are present
+        """
         self.check_model()
 
-    def _get_model(self) -> str:
-        return self.model
+    def _get_model_type(self) -> str:
+        return self.model_type
+
+    def _get_model_name(self) -> str:
+        return self.model_name
 
     def _get_role(self) -> str:
         return self.role
@@ -25,7 +33,8 @@ class largeLanguageModel:
     def _get_question(self) -> str:
         return self.question
 
-    def ask_question(self, question:str) -> str:
+    def define_question(self, question:str) -> str:
+        self._checks()
         self.question = question
 
     def set_user(self, user:str) -> str:
@@ -40,15 +49,19 @@ class largeLanguageModel:
         except:
             raise AssertionError('=== Only mistral from ollama and llamaCPP from llamaindex are supported for now ===') 
 
+    def model(self):
+        '''which model to use. This is defined by children classes
+        '''
+        pass
 
 if __name__ == '__main__':
 
     from edullm.llm.llm.llamaindex.llamaindex import LlamaIndexLLM
 
-    llm = largeLanguageModel(model="llamaCPP")
-    llm.ask_question("Why is the sky blue?")
-    
-    llamaCPP = LlamaIndexLLM().llamaCPP()
-    response_iter = llamaCPP.stream_complete(llm._get_question())
+    llm = LlamaIndexLLM()
+    print(llm.model_type)
+    llm = llm.define_question("Why is the sky blue?")
+    model = llm.model()
+    response_iter = model.stream_complete(llm._get_question())
     for response in response_iter:
         print(response.delta, end="", flush=True)

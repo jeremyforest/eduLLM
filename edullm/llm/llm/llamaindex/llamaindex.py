@@ -1,20 +1,24 @@
-from llama_index import (
-    SimpleDirectoryReader,
-    VectorStoreIndex,
-    ServiceContext,
-)
 from llama_index.llms import LlamaCPP
 from llama_index.llms.llama_utils import (
     messages_to_prompt,
     completion_to_prompt,
 )
+from edullm.llm.edu_llm import edu_LLM
 
-class LlamaIndexLLM:
+class LlamaIndexLLM(edu_LLM):
     def __init__(self) -> None:
-        pass
+        super().__init__(
+            model_type = "llamaIndexModel"
+        ) 
 
-    def llamaCPP(self, param_number:int = 7):
 
+    def define_question(self, question: str) -> str:
+        return super().question(question)
+
+    def model(self, param_number:int = 7, question:str = ''):
+
+        self.model_name = 'llamaCPP'
+        
         model_url = f"https://huggingface.co/TheBloke/Llama-2-{param_number}B-chat-GGUF/resolve/main/llama-2-{param_number}b-chat.Q4_0.gguf"
 
         llm = LlamaCPP(
