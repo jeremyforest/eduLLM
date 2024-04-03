@@ -1,48 +1,39 @@
-from llama_index import ServiceContext, VectorStoreIndex, SimpleDirectoryReader
-from llama_index import set_global_tokenizer
-# from llama_index.embeddings import OptimumEmbedding
-from llama_index.embeddings import HuggingFaceEmbedding
-from transformers import AutoTokenizer
-
-
-set_global_tokenizer(
-    AutoTokenizer.from_pretrained("NousResearch/Llama-2-7b-chat-hf").encode
-)
-
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
 class EmbeddingModel:
     def __init__(self, 
                 rag_folder:str = "edullm/llm/rag",
-                embedding_model:str = ""
+                emb_model:str = "BAAI/bge-small-en-v1.5"
                 ):
         self.rag_folder = rag_folder
         self.rag_data_folder = f"{self.rag_folder}/data",
-        self.embedding_model = embedding_model
+        self.emb_model = emb_model
 
-    def embed_model(self, model:str = 'bge-small-en-v1.5'):
-        """ Create the embed model
+        self.embedding_model()
+        
+    def embedding_model(self):
+        """ Create the embedding model
         """
-        model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+        model = HuggingFaceEmbedding(model_name=f"{self.emb_model}")
         return model
     
 
 def main():
     from edullm.llm.llm.llamaindex.llamaindex import LlamaIndexLLM
-    llm = LlamaIndexLLM().llamaCPP()
+    llm = LlamaIndexLLM().model()
     embedding = EmbeddingModel()
-    embed_model = embedding.embed_model()
 
-    # create a service context
-    service_context = ServiceContext.from_defaults(
-        llm=llm,
-        embed_model=embed_model,
-    )
+
+    from llama_index.core import Settings
+    Settings.llm = llm
+    Settings.embed_model = embedding
 
     # load documents
     documents = SimpleDirectoryReader(embedding.rag_data_folder[0]).load_data()
     
     # create vector store index
-    index = VectorStoreIndex.from_documents(documents, service_context=service_context)
+    index = VectorStoreIndex.from_documents(documents)
 
     # set up query engine
     query_engine = index.as_query_engine()
