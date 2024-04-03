@@ -1,8 +1,4 @@
-from llama_index.llms import LlamaCPP
-from llama_index.llms.llama_utils import (
-    messages_to_prompt,
-    completion_to_prompt,
-)
+from llama_index.llms.llama_cpp import LlamaCPP
 from edullm.llm.edu_llm import edu_LLM
 
 class LlamaIndexLLM(edu_LLM):
@@ -11,10 +7,29 @@ class LlamaIndexLLM(edu_LLM):
             model_type = "llamaIndexModel"
         ) 
 
-    def define_question(self, question: str) -> str:
-        return super().question(question)
+    def messages_to_prompt(self, messages):
+        prompt = ""
+        for message in messages:
+            if message.role == 'system':
+               prompt += f"<|system|>\n{message.content}</s>\n"
+            elif message.role == 'user':
+               prompt += f"<|user|>\n{message.content}</s>\n"
+            elif message.role == 'assistant':
+               prompt += f"<|assistant|>\n{message.content}</s>\n"
 
-    def model(self, param_number:int = 7, question:str = ''):
+        # ensure we start with a system prompt, insert blank if needed
+        if not prompt.startswith("<|system|>\n"):
+            prompt = "<|system|>\n</s>\n" + prompt
+
+        # add final assistant prompt
+        prompt = prompt + "<|assistant|>\n"
+
+        return prompt
+
+    def completion_to_prompt(self, completion):
+        return f"<|system|>\n</s>\n<|user|>\n{completion}</s>\n<|assistant|>\n"
+    
+    def model(self, param_number:int = 7):
 
         self.model_name = 'llamaCPP'
         
@@ -35,8 +50,8 @@ class LlamaIndexLLM(edu_LLM):
             # set to at least 1 to use GPU
             model_kwargs={"n_gpu_layers": 1},
             # transform inputs into Llama2 format
-            messages_to_prompt=messages_to_prompt,
-            completion_to_prompt=completion_to_prompt,
+            messages_to_prompt=self.messages_to_prompt,
+            completion_to_prompt=self.completion_to_prompt,
             verbose=True,
         )
         return llm 
