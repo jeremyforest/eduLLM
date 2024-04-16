@@ -31,7 +31,10 @@ def main():
     Settings.embed_model = embedding_model
 
     # load documents
-    documents = SimpleDirectoryReader(embedding.rag_data_folder[0]).load_data()
+    # documents = SimpleDirectoryReader(embedding.rag_data_folder[0]).load_data()
+    
+    from edullm.inputs.importer import Importer
+    documents = Importer().load()
     
     # create vector store index
     index = VectorStoreIndex.from_documents(documents)
@@ -40,7 +43,7 @@ def main():
     streaming = False
     query_engine = index.as_query_engine(streaming=streaming)
 
-    response = query_engine.query("What did the author do growing up?")
+    response = query_engine.query("Can you summarize what the data I provided with is about in a concise paragram of 300 words ?")
     if streaming:
         [print(token) for token in response.response_gen]
     else:
