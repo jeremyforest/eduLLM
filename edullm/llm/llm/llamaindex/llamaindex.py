@@ -1,21 +1,20 @@
 from llama_index.llms.llama_cpp import LlamaCPP
 from edullm.llm.edu_llm import edu_LLM
 
+
 class LlamaIndexLLM(edu_LLM):
     def __init__(self) -> None:
-        super().__init__(
-            model_type = "llamaIndexModel"
-        ) 
+        super().__init__(model_type="llamaIndexModel")
 
     def messages_to_prompt(self, messages):
         prompt = ""
         for message in messages:
-            if message.role == 'system':
-               prompt += f"<|system|>\n{message.content}</s>\n"
-            elif message.role == 'user':
-               prompt += f"<|user|>\n{message.content}</s>\n"
-            elif message.role == 'assistant':
-               prompt += f"<|assistant|>\n{message.content}</s>\n"
+            if message.role == "system":
+                prompt += f"<|system|>\n{message.content}</s>\n"
+            elif message.role == "user":
+                prompt += f"<|user|>\n{message.content}</s>\n"
+            elif message.role == "assistant":
+                prompt += f"<|assistant|>\n{message.content}</s>\n"
 
         # ensure we start with a system prompt, insert blank if needed
         if not prompt.startswith("<|system|>\n"):
@@ -28,11 +27,11 @@ class LlamaIndexLLM(edu_LLM):
 
     def completion_to_prompt(self, completion):
         return f"<|system|>\n</s>\n<|user|>\n{completion}</s>\n<|assistant|>\n"
-    
-    def model(self, param_number:int = 7):
 
-        self.model_name = 'llamaCPP'
-        
+    def model(self, param_number: int = 7):
+
+        self.model_name = "llamaCPP"
+
         model_url = f"https://huggingface.co/TheBloke/Llama-2-{param_number}B-chat-GGUF/resolve/main/llama-2-{param_number}b-chat.Q4_0.gguf"
 
         llm = LlamaCPP(
@@ -54,7 +53,8 @@ class LlamaIndexLLM(edu_LLM):
             completion_to_prompt=self.completion_to_prompt,
             verbose=True,
         )
-        return llm 
+        return llm
+
 
 if __name__ == "__main__":
     llm = LlamaIndexLLM().model()

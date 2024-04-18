@@ -2,13 +2,13 @@
 
 class edu_LLM:
     '''define the general llm class properties'''
-    def __init__(self, 
-                model_type:str = None,
-                model_name:str = None, 
-                role:str = None, 
-                question:str = None) -> None:
+
+    def __init__(self, model_type: str = "",
+                 model_name: str = "",
+                 role: str = "",
+                 question: str = "") -> None:
         """
-        
+
         """
 
         self.model_type = model_type
@@ -17,7 +17,8 @@ class edu_LLM:
         self.question = question
 
     def _checks(self):
-        """Checking that the requirement to run the model, whatever they are, are present
+        """Checking that the requirement to run the model,
+        whatever they are, are present
         """
         self.check_model()
 
@@ -33,26 +34,30 @@ class edu_LLM:
     def _get_question(self) -> str:
         return self.question
 
-    def define_question(self, question:str) -> str:
+    def define_question(self, question: str):
         self._checks()
         self.question = question
 
-    def set_user(self, user:str) -> str:
+    def set_user(self, user: str):
         self.user = user
 
     def check_model(self):
         '''check which model the user wants to use
-        #TODO If the model doesn't exist, return an error. If the model can be downloaded, then download it.
+        #TODO If the model doesn't exist, return an error.
+        If the model can be downloaded, then download it.
         '''
         try:
             assert (self.model == 'mistral' or self.model == "llamaCPP")
-        except:
-            raise AssertionError('=== Only mistral from ollama and llamaCPP from llamaindex are supported for now ===') 
+        except AssertionError:
+            raise AssertionError(
+                '''=== Only mistral from ollama and llamaCPP from '
+                llamaindex are supported for now ===''')
 
     def model(self):
         '''which model to use. This is defined by children classes
         '''
         pass
+
 
 if __name__ == '__main__':
 
