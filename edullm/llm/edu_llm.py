@@ -1,15 +1,14 @@
-
-
 class edu_LLM:
-    '''define the general llm class properties'''
+    """define the general llm class properties"""
 
-    def __init__(self, model_type: str = "",
-                 model_name: str = "",
-                 role: str = "",
-                 question: str = "") -> None:
-        """
-
-        """
+    def __init__(
+        self,
+        model_type: str = "",
+        model_name: str = "",
+        role: str = "",
+        question: str = "",
+    ) -> None:
+        """ """
 
         self.model_type = model_type
         self.model_name = model_name
@@ -34,6 +33,28 @@ class edu_LLM:
     def _get_question(self) -> str:
         return self.question
 
+    def messages_to_prompt(self, messages):
+        prompt = ""
+        for message in messages:
+            if message.role == "system":
+                prompt += f"<|system|>\n{message.content}</s>\n"
+            elif message.role == "user":
+                prompt += f"<|user|>\n{message.content}</s>\n"
+            elif message.role == "assistant":
+                prompt += f"<|assistant|>\n{message.content}</s>\n"
+
+        # ensure we start with a system prompt, insert blank if needed
+        if not prompt.startswith("<|system|>\n"):
+            prompt = "<|system|>\n</s>\n" + prompt
+
+        # add final assistant prompt
+        prompt = prompt + "<|assistant|>\n"
+
+        return prompt
+
+    def completion_to_prompt(self, completion):
+        return f"<|system|>\n</s>\n<|user|>\n{completion}</s>\n<|assistant|>\n"
+
     def define_question(self, question: str):
         self._checks()
         self.question = question
@@ -42,24 +63,24 @@ class edu_LLM:
         self.user = user
 
     def check_model(self):
-        '''check which model the user wants to use
+        """check which model the user wants to use
         #TODO If the model doesn't exist, return an error.
         If the model can be downloaded, then download it.
-        '''
+        """
         try:
-            assert (self.model == 'mistral' or self.model == "llamaCPP")
+            assert self.model == "mistral" or self.model == "llamaCPP"
         except AssertionError:
             raise AssertionError(
-                '''=== Only mistral from ollama and llamaCPP from '
-                llamaindex are supported for now ===''')
+                """=== Only mistral from ollama and llamaCPP from '
+                llamaindex are supported for now ==="""
+            )
 
     def model(self):
-        '''which model to use. This is defined by children classes
-        '''
+        """which model to use. This is defined by children classes"""
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     from edullm.llm.llm.llamaindex.llamaindex import LlamaIndexLLM
 
