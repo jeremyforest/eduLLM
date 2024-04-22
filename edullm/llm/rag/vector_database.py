@@ -18,8 +18,9 @@ class Index:
         return exist
 
     def generate_index(self, documents: Any):
-        index = VectorStoreIndex.from_documents(documents)
+        index = VectorStoreIndex.from_documents(documents, show_progress=True)
         index.storage_context.persist(persist_dir=self.vector_db_path)
+        return index
 
     def get_index(self, documents: Optional[Any]):
         if self.exist:
@@ -27,7 +28,8 @@ class Index:
                 StorageContext.from_defaults(persist_dir=self.vector_db_path)
             )
         else:
-            self.generate_index(documents)
+            index = self.generate_index(documents)
+        return index
 
 
 if __name__ == "__main__":
@@ -47,5 +49,5 @@ if __name__ == "__main__":
     ).load_data()
 
     index = Index("test")
-    index.get_index(documents)
+    index = index.get_index(documents)
     print(index)

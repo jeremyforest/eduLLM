@@ -29,7 +29,6 @@ class LlamaIndexLLM(edu_LLM):
         return f"<|system|>\n</s>\n<|user|>\n{completion}</s>\n<|assistant|>\n"
 
     def model(self, param_number: int = 7):
-
         self.model_name = "llamaCPP"
 
         model_url = f"https://huggingface.co/TheBloke/Llama-2-{param_number}B-chat-GGUF/resolve/main/llama-2-{param_number}b-chat.Q4_0.gguf"

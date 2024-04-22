@@ -23,14 +23,19 @@ class EmbeddingModel:
 
 def main():
     from edullm.llm.llm.llamaindex.llamaindex import LlamaIndexLLM
+    from edullm.llm.llm.ollama.o_llama import OllamaLLM
 
-    llm = LlamaIndexLLM().model()
+    # llm = LlamaIndexLLM().model()
+    llm = OllamaLLM()
+    llm.pull_model()
+    llm.launch_server()
+    llm_model = llm.model()
     embedding = EmbeddingModel()
     embedding_model = embedding.model()
 
     from llama_index.core import Settings
 
-    Settings.llm = llm
+    Settings.llm = llm_model
     Settings.embed_model = embedding_model
 
     # load documents
@@ -41,7 +46,13 @@ def main():
     documents = Importer().load()
 
     # create vector store index
-    index = VectorStoreIndex.from_documents(documents)
+    index = VectorStoreIndex.from_documents(documents, show_progress=True)
+    from edullm.llm.rag.vector_database import Index
+
+    index2 = Index("neuromatch").get_index(documents)
+
+    print(index)
+    print(index2)
 
     # set up query engine
     streaming = False

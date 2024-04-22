@@ -81,7 +81,6 @@ class edu_LLM:
 
 
 if __name__ == "__main__":
-
     from edullm.llm.llm.llamaindex.llamaindex import LlamaIndexLLM
 
     llm = LlamaIndexLLM()
