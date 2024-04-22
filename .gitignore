@@ -1,6 +1,6 @@
 # Repo specific folder and files
 edullm/llm/rag/data
-
+edullm/llm/rag/db
 # For now ignoring other llm than llamaIndex
 edullm/llm/llm/llamacpp/
 edullm/llm/llm/ollama/
