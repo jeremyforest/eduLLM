@@ -46,13 +46,10 @@ def main():
     documents = Importer().load()
 
     # create vector store index
-    index = VectorStoreIndex.from_documents(documents, show_progress=True)
+    # index = VectorStoreIndex.from_documents(documents, show_progress=True)
     from edullm.llm.rag.vector_database import Index
+    index = Index("neuromatch").get_index(documents)
 
-    index2 = Index("neuromatch").get_index(documents)
-
-    print(index)
-    print(index2)
 
     # set up query engine
     streaming = False
