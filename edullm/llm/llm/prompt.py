@@ -1,35 +1,43 @@
 from llama_index.core import ChatPromptTemplate
-
+from llama_index.core import PromptTemplate
 
 
 class Prompt:
     def __init__(self):
-        self.user= ""
-        self.system = ""
+        self.user_prompt = ""
+        self.system_prompt = ""
 
-    def user_prompt(self, prompt: str):
-        self.user = prompt
+    def set_user_prompt(self):
+        self.user_prompt = (
+            "Context information is below.\n"
+            "---------------------\n"
+            "{context_str}\n"
+            "---------------------\n"
+            "Given the context information and not prior knowledge, "
+            "answer the query in a consise way attempting to teach, "
+            "a university graduate course level.\n"
+            "Query: {query_str}\n"
+            "Answer: "
+        )
 
     def get_user_prompt(self):
-        print(self.user)
+        print(self.user_prompt)
 
-    def system_prompt(self, prompt: str):
-        self.system = prompt
+    def set_system_prompt(self):
+        self.system_prompt = () 
 
     def get_system_prompt(self):
-        print(self.system)
-
-
-class LlamaIndexPromptFormat(Prompt):
-    def __init__(self):
-        super().__init__()
-
+        print(self.system_prompt)
 
 
 if __name__ == "__main__":
     prompt = Prompt()
-    user_prompt = prompt.user_prompt('test')
-    system_prompt = prompt.system_prompt('test')
+
+    print(prompt.get_user_prompt())
+    print(prompt.get_system_prompt())
+
+    user_prompt = prompt.set_user_prompt()
+    system_prompt = prompt.set_system_prompt()
 
     print(prompt.get_user_prompt())
     print(prompt.get_system_prompt())
