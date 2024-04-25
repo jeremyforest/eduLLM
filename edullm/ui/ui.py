@@ -34,8 +34,8 @@ def main():
         with st.chat_message("assistant"):
             with st.spinner("Processing"):
                 response = rag_pipeline._query_chat_engine(query)
-                st.write(response)
-                message = {"role": "assistant", "content": response}
+                st.write(response.response)
+                # message = {"role": "assistant", "content": response.response}
                 st.session_state.messages.append(message)
 
 
